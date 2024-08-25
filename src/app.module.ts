@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PeliculasModule } from './peliculas/peliculas.module';
 import { DirectoresModule } from './directores/directores.module';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Director } from './directores/entities/director.entity';
 import { Pelicula } from './peliculas/entities/pelicula.entity';
 
