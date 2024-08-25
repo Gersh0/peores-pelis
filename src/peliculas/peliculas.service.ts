@@ -51,11 +51,7 @@ export class PeliculasService {
 
   async update(id: string, updatePeliculaDto: UpdatePeliculaDto) {
     const director = await this.directorRepository.findOne({ where: { id: updatePeliculaDto.directorId } });
-    const pelicula = await this.peliculaRepository.preload({ id, ...updatePeliculaDto, director });
-    if (!pelicula) {
-      throw new Error('Pelicula no encontrada');
-    }
-    return this.peliculaRepository.save(pelicula);
+    return director.peoresPeliculas;
   }
 
   remove(id: string) {
