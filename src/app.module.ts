@@ -7,6 +7,7 @@ import { PeliculasModule } from './peliculas/peliculas.module';
 import { DirectoresModule } from './directores/directores.module';
 import { Director } from './directores/entities/director.entity';
 import { Pelicula } from './peliculas/entities/pelicula.entity';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { Pelicula } from './peliculas/entities/pelicula.entity';
       synchronize: true,
     }),
     PeliculasModule, 
-    DirectoresModule],
+    DirectoresModule, SeedModule],
   controllers: [AppController],
   providers: [AppService],
 })

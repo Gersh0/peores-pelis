@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 export class DirectoresService {
   constructor(
     @InjectRepository(Director) private readonly directorRepository: Repository<Director>,
-   ) {}
+  ) { }
 
   async create(createDirectorDto: CreateDirectorDto) {
     const director = this.directorRepository.create(createDirectorDto);
@@ -23,34 +23,40 @@ export class DirectoresService {
   }
 
   async findOne(id: string) {
-    const director = await this.directorRepository.findOne({
-      where: { id },
-      relations: ['peoresPeliculas'],
-    });
-    return director;
+    try {
+      const director = await this.directorRepository.findOne({
+        where: { id },
+        relations: ['peoresPeliculas'],
+      });
+      if (!director) {
+        throw new BadRequestException('Director no encontrado');
+      }
+      return director;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(id: string, updateDirectorDto: UpdateDirectorDto) {
-    const director = await this.directorRepository.preload({
-      id: id,
-      ...updateDirectorDto,
-    });
-    if (!director) {
-      throw new Error('Director no encontrado');
+    try {
+      const director = await this.directorRepository.preload({
+        id: id,
+        ...updateDirectorDto,
+      });
+      if (!director) {
+        throw new Error('Director no encontrado');
+      }
+      return this.directorRepository.save(director);
+    } catch (error) {
+      throw error;
     }
-    return this.directorRepository.save(director);
   }
 
   remove(id: string) { //arreglar mejor
-    if (!this.directorRepository.delete(id)) {
-      throw new BadRequestException('Director no encontrado');
+    try {
+      return this.directorRepository.delete(id);
+    } catch (error) {
+      throw error;
     }
-
-    //Check first if director has any movies
-    const director = this.directorRepository.findOne({where:{ id }, relations: ['peoresPeliculas'] });
-    if (director) {
-      throw new BadRequestException('Director tiene peliculas asociadas');
-    }
-    return this.directorRepository.delete(id);
   }
 }

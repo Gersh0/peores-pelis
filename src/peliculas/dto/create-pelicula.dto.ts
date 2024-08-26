@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
+import { CreateDirectorDto } from "src/directores/dto/create-director.dto";
 
 export class CreatePeliculaDto { 
     @IsNotEmpty()

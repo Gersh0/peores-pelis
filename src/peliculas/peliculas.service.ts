@@ -13,7 +13,7 @@ export class PeliculasService {
     @InjectRepository(Director) private readonly directorRepository: Repository<Director>,
   ) { }
 
-    async create(createPeliculaDto: CreatePeliculaDto) {
+  async create(createPeliculaDto: CreatePeliculaDto) {
     try {
       const director = await this.directorRepository.findOne({ where: { id: createPeliculaDto.directorId } });
       if (!director) {
@@ -36,22 +36,50 @@ export class PeliculasService {
   }
 
   async findOne(id: string) {
-    console.log(id);
-    const pelicula = await this.peliculaRepository.findOne({ where: { id }, relations: ['director'] });
-    return {
-      ...pelicula,
-      director: pelicula.director.nombre
-    };
+    try {
+      const pelicula = await this.peliculaRepository.findOne({ where: { id }, relations: ['director'] });
+      if (!pelicula) {
+        throw new BadRequestException('Pelicula no encontrada');
+      }
+      return {
+        ...pelicula,
+        director: pelicula.director.nombre
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findMoviesByDirectorId(id: string) {
-    const director = await this.directorRepository.findOne({ where: { id }, relations: ['peoresPeliculas'] });
-    return director.peoresPeliculas;
+    try {
+      const director = await this.directorRepository.findOne({ where: { id }, relations: ['peoresPeliculas'] });
+      if (!director) {
+        throw new BadRequestException('Director no encontrado');
+      }
+      return director.peoresPeliculas;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(id: string, updatePeliculaDto: UpdatePeliculaDto) {
-    const director = await this.directorRepository.findOne({ where: { id: updatePeliculaDto.directorId } });
-    return director.peoresPeliculas;
+    try {
+      const director = await this.directorRepository.findOne({ where: { id: updatePeliculaDto.directorId } });
+      if (!director) {
+        throw new BadRequestException('Director no encontrado');
+      }
+      const pelicula = await this.peliculaRepository.preload({
+        id: id,
+        ...updatePeliculaDto,
+        director,
+      });
+      if (!pelicula) {
+        throw new BadRequestException('Pelicula no encontrada');
+      }
+      return this.peliculaRepository.save(pelicula);
+    } catch (error) {
+      throw error;
+    }
   }
 
   remove(id: string) {
