@@ -28,6 +28,9 @@ docker compose --env-file .env up --build -d
 http://localhost:3000/seed 
 ```
 
-6. Si quiere puede importar mis request en postman (Paso el link por teams):
+6. Puedes importar mis request en postman:
+```
+https://www.postman.com/navigation-operator-9327190/workspace/web/overview
+```
 
 ## Nest es amor ❤️
